@@ -17,7 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-        applicationVariants.all { variant ->
+        /*applicationVariants.all { variant ->
             variant.outputs.each { output ->
                 def outputFile = output.outputFile
                 if (outputFile != null && outputFile.name.endsWith('.apk')) {
@@ -26,7 +26,7 @@ android {
                     output.outputFile = new File(outputFile.parent, fileName)
                 }
             }
-        }
+        }*/
     }
 }
 
@@ -52,7 +52,7 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
 
     // di
-    compile 'com.jakewharton:butterknife:8.5.1'
+    compile 'com.jakewharton:butterknife:8.8.1'
 
     // ui
     compile 'cn.bingoogolapple:bga-swipebacklayout:1.0.8'
@@ -64,7 +64,7 @@ dependencies {
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
 
     // canary
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }
