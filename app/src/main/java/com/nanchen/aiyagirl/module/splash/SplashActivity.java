@@ -20,7 +20,7 @@ import butterknife.OnClick;
 
 /**
  * 闪屏页面
- *
+ * <p>
  * Author: nanchen
  * Email: liushilin520@foxmail.com
  * Date: 2017-04-07  14:59
@@ -28,13 +28,14 @@ import butterknife.OnClick;
 
 public class SplashActivity extends BaseActivity {
     private boolean isIn;
+    private int i = new Random().nextInt(ConstantsImageUrl.TRANSITION_URLS.length);
 
     @BindView(R.id.splash_iv_pic)
     ImageView mIvPic;
     @BindView(R.id.splash_tv_jump)
     TextView mTvJump;
-    @BindView(R.id.splash_iv_defult_pic)
-    ImageView mIvDefultPic;
+    @BindView(R.id.splash_iv_default_pic)
+    ImageView mIvDefaultPic;
 
     @Override
     protected int getContentViewLayoutID() {
@@ -43,18 +44,13 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        int i = new Random().nextInt(ConstantsImageUrl.TRANSITION_URLS.length);
         // 先显示默认图
-        mIvDefultPic.setImageDrawable(getResources().getDrawable(R.drawable.img_transition_default));
-        Glide.with(this)
-                .load(ConstantsImageUrl.TRANSITION_URLS[i])
-                .placeholder(R.drawable.img_transition_default)
-                .error(R.drawable.img_transition_default)
-                .into(mIvPic);
+        mIvDefaultPic.setImageDrawable(getResources().getDrawable(R.drawable.img_transition_default));
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mIvDefultPic.setVisibility(View.GONE);
+                showPic();
+                mIvDefaultPic.setVisibility(View.GONE);
             }
         }, 1500);
 
@@ -64,6 +60,17 @@ public class SplashActivity extends BaseActivity {
                 toMainActivity();
             }
         }, 3500);
+    }
+
+    /**
+     * 加载第二张图片
+     */
+    private void showPic() {
+        Glide.with(this)
+                .load(ConstantsImageUrl.TRANSITION_URLS[i])
+                .placeholder(R.drawable.img_transition_default)
+                .error(R.drawable.img_transition_default)
+                .into(mIvPic);
     }
 
     @Override
@@ -78,14 +85,12 @@ public class SplashActivity extends BaseActivity {
         if (isIn) {
             return;
         }
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        //跳转加动画，可以抽到base
+        startActivity(new Intent(this, HomeActivity.class));
         overridePendingTransition(R.anim.screen_zoom_in, R.anim.screen_zoom_out);
         finish();
         isIn = true;
     }
-
-
 
     @OnClick(R.id.splash_tv_jump)
     public void onClick() {
