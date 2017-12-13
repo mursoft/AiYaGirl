@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -13,8 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.kekstudio.dachshundtablayout.DachshundTabLayout;
 import com.nanchen.aiyagirl.GlideImageLoader;
@@ -43,7 +40,6 @@ import java.util.List;
 import butterknife.BindView;
 import es.dmoral.toasty.Toasty;
 
-
 /**
  * 主页面
  * <p>
@@ -52,10 +48,8 @@ import es.dmoral.toasty.Toasty;
  * Date: 2017-04-07  15:31
  */
 
-public class HomeActivity extends BaseActivity implements IHomeView,OnBannerListener{
+public class HomeActivity extends BaseActivity implements IHomeView, OnBannerListener {
 
-    @BindView(R.id.main_head_img)
-    ImageView mHeadImg;
     @BindView(R.id.main_toolbar)
     Toolbar mToolbar;
     @BindView(R.id.main_appbar)
@@ -70,13 +64,9 @@ public class HomeActivity extends BaseActivity implements IHomeView,OnBannerList
     DrawerLayout mDrawerLayout;
     @BindView(R.id.main_banner)
     Banner mBanner;
-    @BindView(R.id.main_fab)
-    FloatingActionButton mFab;
     // 保存用户按返回键的时间
     private long mExitTime = 0;
     private HomePresenter mHomePresenter;
-
-
 
     @Override
     protected int getContentViewLayoutID() {
@@ -86,26 +76,22 @@ public class HomeActivity extends BaseActivity implements IHomeView,OnBannerList
     @Override
     protected void beforeInit() {
         super.beforeInit();
+        //加载之前设置状态栏
         StatusBarUtil.setTranslucent(this);
     }
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        //初始化Presenter
         mHomePresenter = new HomePresenter(this);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4 以上版本
+        // 4.4 以上版本
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // 设置 Toolbar 高度为 80dp，适配状态栏
             ViewGroup.LayoutParams layoutParams = mToolbar.getLayoutParams();
-            layoutParams.height = ScreenUtil.dip2px(this,80);
+            layoutParams.height = ScreenUtil.dip2px(this, 80);
             mToolbar.setLayoutParams(layoutParams);
         }
-
-//        LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-//        params.setMargins(0,ScreenUtil.getStatusBarHeight(this),0,0);
-//        params.gravity = Gravity.CENTER_HORIZONTAL;
-//        mTabLayout.setLayoutParams(params);
-
-
 
         initDrawerLayout();
 
@@ -120,7 +106,7 @@ public class HomeActivity extends BaseActivity implements IHomeView,OnBannerList
                 GlobalConfig.CATEGORY_NAME_RECOMMEND,
                 GlobalConfig.CATEGORY_NAME_RESOURCE};
 
-        CommonViewPagerAdapter infoPagerAdapter = new CommonViewPagerAdapter(getSupportFragmentManager(),titles);
+        CommonViewPagerAdapter infoPagerAdapter = new CommonViewPagerAdapter(getSupportFragmentManager(), titles);
         // App
         CategoryFragment appFragment = CategoryFragment.newInstance(titles[0]);
         // Android
@@ -131,7 +117,7 @@ public class HomeActivity extends BaseActivity implements IHomeView,OnBannerList
         CategoryFragment frontFragment = CategoryFragment.newInstance(titles[3]);
         // 瞎推荐
         CategoryFragment referenceFragment = CategoryFragment.newInstance(titles[4]);
-        // 拓展资源s
+        // 拓展资源
         CategoryFragment resFragment = CategoryFragment.newInstance(titles[5]);
 
         infoPagerAdapter.addFragment(appFragment);
@@ -146,16 +132,13 @@ public class HomeActivity extends BaseActivity implements IHomeView,OnBannerList
         mViewPager.setCurrentItem(1);
         mViewPager.setOffscreenPageLimit(6);
 
-
         mHomePresenter.subscribe();
     }
-
-
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mHomePresenter != null){
+        if (mHomePresenter != null) {
             mHomePresenter.unSubscribe();
         }
     }
@@ -169,6 +152,7 @@ public class HomeActivity extends BaseActivity implements IHomeView,OnBannerList
      * inflateHeaderView 进来的布局要宽一些
      */
     private void initDrawerLayout() {
+        //加载侧滑布局
         mNavView.inflateHeaderView(R.layout.layout_main_nav);
         View headerView = mNavView.getHeaderView(0);
         headerView.findViewById(R.id.ll_nav_homepage).setOnClickListener(mListener);
@@ -177,9 +161,11 @@ public class HomeActivity extends BaseActivity implements IHomeView,OnBannerList
         headerView.findViewById(R.id.ll_nav_login).setOnClickListener(mListener);
         headerView.findViewById(R.id.ll_nav_exit).setOnClickListener(mListener);
         headerView.findViewById(R.id.ll_nav_donation).setOnClickListener(mListener);
-
     }
 
+    /**
+     * 避免连续点击
+     */
     private PerfectClickListener mListener = new PerfectClickListener() {
         @Override
         protected void onNoDoubleClick(final View v) {
@@ -187,48 +173,50 @@ public class HomeActivity extends BaseActivity implements IHomeView,OnBannerList
             mDrawerLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                   switch (v.getId()){
-                       case R.id.ll_nav_homepage: // 项目主页
-                           startActivity(new Intent(HomeActivity.this, NavHomeActivity.class));
-                           break;
-                       case R.id.ll_nav_scan_address: // 关于我们
-                           startActivity(new Intent(HomeActivity.this, NavAboutActivity.class));
-                           break;
-                       case R.id.ll_nav_deedback: // 问题反馈
-                           startActivity(new Intent(HomeActivity.this, NavDeedBackActivity.class));
-                           break;
-                       case R.id.ll_nav_donation: // 捐赠开发者
-                           // https://fama.alipay.com/qrcode/qrcodelist.htm?qrCodeType=P  二维码地址
-                           // http://cli.im/deqr/ 解析二维码
-                           // aex01018hzmxqeqmcaffh96
-                           if (AlipayZeroSdk.hasInstalledAlipayClient(HomeActivity.this)) {
-                               AlipayZeroSdk.startAlipayClient(HomeActivity.this, "aex01018hzmxqeqmcaffh96");
-                           } else {
-                               Snackbar.make(mToolbar, "谢谢，您没有安装支付宝客户端", Snackbar.LENGTH_LONG).show();
-                           }
-                           break;
-                       case R.id.ll_nav_login: // 登录github账号
-                           Intent intent_login = new Intent(HomeActivity.this, WebViewActivity.class);
-                           intent_login.putExtra(WebViewActivity.GANK_TITLE, "登录github");
-                           intent_login.putExtra(WebViewActivity.GANK_URL, "https://github.com/login");
-                           startActivity(intent_login);
-                           break;
-                       case R.id.ll_nav_exit:
-                           finish();
-                           break;
-                       default:
-                           break;
-                   }
+                    switch (v.getId()) {
+                        case R.id.ll_nav_homepage: // 项目主页
+                            startActivity(new Intent(HomeActivity.this, NavHomeActivity.class));
+                            break;
+                        case R.id.ll_nav_scan_address: // 关于我们
+                            startActivity(new Intent(HomeActivity.this, NavAboutActivity.class));
+                            break;
+                        case R.id.ll_nav_deedback: // 问题反馈
+                            startActivity(new Intent(HomeActivity.this, NavDeedBackActivity.class));
+                            break;
+                        case R.id.ll_nav_donation: // 捐赠开发者
+                            // https://fama.alipay.com/qrcode/qrcodelist.htm?qrCodeType=P  二维码地址
+                            // http://cli.im/deqr/ 解析二维码
+                            // aex01018hzmxqeqmcaffh96
+                            if (AlipayZeroSdk.hasInstalledAlipayClient(HomeActivity.this)) {
+                                AlipayZeroSdk.startAlipayClient(HomeActivity.this, "aex01018hzmxqeqmcaffh96");
+                            } else {
+                                Snackbar.make(mToolbar, "谢谢，您没有安装支付宝客户端", Snackbar.LENGTH_LONG).show();
+                            }
+                            break;
+                        case R.id.ll_nav_login: // 登录github账号
+                            Intent intent_login = new Intent(HomeActivity.this, WebViewActivity.class);
+                            intent_login.putExtra(WebViewActivity.GANK_TITLE, "登录github");
+                            intent_login.putExtra(WebViewActivity.GANK_URL, "https://github.com/login");
+                            startActivity(intent_login);
+                            break;
+                        case R.id.ll_nav_exit:
+                            finish();
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            },260);
+            }, 260);
         }
     };
 
-
+    /**
+     * 根据当前时间节点判断是否退出
+     */
     @Override
     public void onBackPressed() {
         if ((System.currentTimeMillis() - mExitTime) > 2000) {
-            Snackbar.make(mDrawerLayout, R.string.exit_toast, Toast.LENGTH_SHORT).show();
+            Snackbar.make(mDrawerLayout, R.string.exit_toast, Snackbar.LENGTH_SHORT).show();
             mExitTime = System.currentTimeMillis();
         } else {
             finish();
@@ -245,7 +233,6 @@ public class HomeActivity extends BaseActivity implements IHomeView,OnBannerList
         mBanner.setImages(imgUrls).setImageLoader(new GlideImageLoader()).start();
     }
 
-
     @Override
     public void OnBannerClick(int position) {
         PictureModel model = mHomePresenter.getBannerModel().get(position);
@@ -253,6 +240,6 @@ public class HomeActivity extends BaseActivity implements IHomeView,OnBannerList
 //        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
 //                this,mBanner,PictureActivity.TRANSIT_PIC);
 //        ActivityCompat.startActivity(this,intent,optionsCompat.toBundle());
-        PictureActivity.start(this,model.url,model.desc,mBanner);
+        PictureActivity.start(this, model.url, model.desc, mBanner);
     }
 }
