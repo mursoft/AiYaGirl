@@ -10,7 +10,6 @@ import com.nanchen.aiyagirl.base.BaseFragment;
 import com.nanchen.aiyagirl.model.CategoryResult.ResultsBean;
 import com.nanchen.aiyagirl.module.category.CategoryContract.ICategoryPresenter;
 import com.nanchen.aiyagirl.module.category.CategoryContract.ICategoryView;
-import com.nanchen.aiyagirl.widget.RecyclerViewDivider;
 import com.nanchen.aiyagirl.widget.RecyclerViewWithFooter.OnLoadMoreListener;
 import com.nanchen.aiyagirl.widget.RecyclerViewWithFooter.RecyclerViewWithFooter;
 
@@ -39,6 +38,12 @@ public class CategoryFragment extends BaseFragment implements ICategoryView, OnR
     private CategoryRecyclerAdapter mAdapter;
     private ICategoryPresenter mICategoryPresenter;
 
+    /**
+     * 创建fragment
+     *
+     * @param mCategoryName 分类名字
+     * @return fragment
+     */
     public static CategoryFragment newInstance(String mCategoryName) {
         CategoryFragment categoryFragment = new CategoryFragment();
         Bundle bundle = new Bundle();
@@ -54,9 +59,10 @@ public class CategoryFragment extends BaseFragment implements ICategoryView, OnR
 
     @Override
     protected void init() {
-        //
+        //初始化CategoryPresenter
         mICategoryPresenter = new CategoryPresenter(this);
 
+        //获取当前fragment的name
         categoryName = getArguments().getString(CATEGORY_NAME);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -64,13 +70,13 @@ public class CategoryFragment extends BaseFragment implements ICategoryView, OnR
         mAdapter = new CategoryRecyclerAdapter(getActivity());
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new RecyclerViewDivider(getActivity(), LinearLayoutManager.HORIZONTAL));
+        //item layout是cardView 可以不要分割线
+        //mRecyclerView.addItemDecoration(new RecyclerViewDivider(getActivity(), LinearLayoutManager.HORIZONTAL));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnLoadMoreListener(this);
         mRecyclerView.setEmpty();
 
         mICategoryPresenter.subscribe();
-
     }
 
     @Override
@@ -93,6 +99,7 @@ public class CategoryFragment extends BaseFragment implements ICategoryView, OnR
 
     @Override
     public void getCategoryItemsFail(String failMessage) {
+        //因为fragment预加载的机制，所以先判断是否显示
         if (getUserVisibleHint()) {
             Toasty.error(this.getContext(), failMessage).show();
         }
@@ -106,7 +113,6 @@ public class CategoryFragment extends BaseFragment implements ICategoryView, OnR
     @Override
     public void addCategoryItems(List<ResultsBean> data) {
         mAdapter.addData(data);
-
     }
 
     @Override

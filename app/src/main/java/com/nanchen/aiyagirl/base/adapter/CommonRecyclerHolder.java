@@ -16,16 +16,15 @@ import android.widget.TextView;
  */
 
 public class CommonRecyclerHolder extends RecyclerView.ViewHolder {
-    public View mConvertView;
-    public int position;
+    private View mConvertView;
+    int position;
     private SparseArray<View> mViews;
 
-    public CommonRecyclerHolder(View itemView) {
+    CommonRecyclerHolder(View itemView) {
         super(itemView);
         this.mConvertView = itemView;
         this.mViews = new SparseArray<>();
     }
-
 
     /**
      * 得到item上的控件
@@ -39,9 +38,7 @@ public class CommonRecyclerHolder extends RecyclerView.ViewHolder {
             view = mConvertView.findViewById(viewId);
             mViews.put(viewId, view);
         }
-
         return (T) view;
-
     }
 
     public CommonRecyclerHolder setTextViewText(@IdRes int textViewId, String text) {

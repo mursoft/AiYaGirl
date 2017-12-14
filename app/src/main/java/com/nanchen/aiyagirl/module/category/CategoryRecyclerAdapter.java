@@ -22,7 +22,7 @@ import com.nanchen.aiyagirl.utils.TimeUtil;
  * Date: 2017-04-14  10:21
  */
 
-class CategoryRecyclerAdapter extends CommonRecyclerAdapter<CategoryResult.ResultsBean> implements ListenerWithPosition.OnClickWithPositionListener<CommonRecyclerHolder>{
+public class CategoryRecyclerAdapter extends CommonRecyclerAdapter<CategoryResult.ResultsBean> implements ListenerWithPosition.OnClickWithPositionListener<CommonRecyclerHolder>{
 
     CategoryRecyclerAdapter(Context context) {
         super(context, null, R.layout.item_category);
@@ -58,10 +58,9 @@ class CategoryRecyclerAdapter extends CommonRecyclerAdapter<CategoryResult.Resul
             } else {
                 imageView.setVisibility(View.GONE);
             }
-
             holder.setTextViewText(R.id.category_item_desc, resultsBean.desc == null ? "unknown" : resultsBean.desc);
             holder.setTextViewText(R.id.category_item_author, resultsBean.who == null ? "unknown" : resultsBean.who);
-            holder.setTextViewText(R.id.category_item_time, TimeUtil.dateFormat(resultsBean.publishedAt));
+            holder.setTextViewText(R.id.category_item_time, resultsBean.publishedAt== null ? "unknown" : TimeUtil.dateFormat(resultsBean.publishedAt));
             holder.setTextViewText(R.id.category_item_src, resultsBean.source == null ? "unknown" : resultsBean.source);
             holder.setOnClickListener(this, R.id.category_item_layout);
         }
@@ -69,7 +68,7 @@ class CategoryRecyclerAdapter extends CommonRecyclerAdapter<CategoryResult.Resul
 
     @Override
     public void onClick(View v, int position, CommonRecyclerHolder holder) {
-//        Toasty.info(mContext,"跳转到相应网页！", Toast.LENGTH_SHORT,true).show();
+        //跳转到相应网页
         Intent intent = new Intent(mContext, WebViewActivity.class);
         intent.putExtra(WebViewActivity.GANK_TITLE, mData.get(position).desc);
         intent.putExtra(WebViewActivity.GANK_URL, mData.get(position).url);

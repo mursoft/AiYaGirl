@@ -43,6 +43,7 @@ public class CategoryPresenter implements ICategoryPresenter {
 
     @Override
     public void getCategoryItems(final boolean isRefresh) {
+        //true是刷新，false是加载更多
         if (isRefresh) {
             mPage = 1;
             mCategoryICategoryView.showSwipeLoading();
@@ -72,6 +73,7 @@ public class CategoryPresenter implements ICategoryPresenter {
                                 // 如果可以，这里可以增加占位图
                                 mCategoryICategoryView.getCategoryItemsFail("获取数据为空！");
                             }else{
+                                //true是刷新，false是加载更多
                                 if (isRefresh) {
                                     mCategoryICategoryView.setCategoryItems(categoryResult.results);
                                     mCategoryICategoryView.hideSwipeLoading();
@@ -87,7 +89,6 @@ public class CategoryPresenter implements ICategoryPresenter {
                         } else {
                             mCategoryICategoryView.getCategoryItemsFail("获取数据失败！");
                         }
-
                     }
                 });
 
