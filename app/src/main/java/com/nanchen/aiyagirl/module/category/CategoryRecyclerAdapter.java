@@ -22,7 +22,7 @@ import com.nanchen.aiyagirl.utils.TimeUtil;
  * Date: 2017-04-14  10:21
  */
 
-public class CategoryRecyclerAdapter extends CommonRecyclerAdapter<CategoryResult.ResultsBean> implements ListenerWithPosition.OnClickWithPositionListener<CommonRecyclerHolder>{
+public class CategoryRecyclerAdapter extends CommonRecyclerAdapter<CategoryResult.ResultsBean> implements ListenerWithPosition.OnClickWithPositionListener<CommonRecyclerHolder> {
 
     CategoryRecyclerAdapter(Context context) {
         super(context, null, R.layout.item_category);
@@ -60,7 +60,7 @@ public class CategoryRecyclerAdapter extends CommonRecyclerAdapter<CategoryResul
             }
             holder.setTextViewText(R.id.category_item_desc, resultsBean.desc == null ? "unknown" : resultsBean.desc);
             holder.setTextViewText(R.id.category_item_author, resultsBean.who == null ? "unknown" : resultsBean.who);
-            holder.setTextViewText(R.id.category_item_time, resultsBean.publishedAt== null ? "unknown" : TimeUtil.dateFormat(resultsBean.publishedAt));
+            holder.setTextViewText(R.id.category_item_time, resultsBean.publishedAt == null ? "unknown" : TimeUtil.dateFormat(resultsBean.publishedAt));
             holder.setTextViewText(R.id.category_item_src, resultsBean.source == null ? "unknown" : resultsBean.source);
             holder.setOnClickListener(this, R.id.category_item_layout);
         }

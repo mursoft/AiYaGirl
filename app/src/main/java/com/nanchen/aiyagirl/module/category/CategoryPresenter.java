@@ -2,8 +2,8 @@ package com.nanchen.aiyagirl.module.category;
 
 import com.nanchen.aiyagirl.config.GlobalConfig;
 import com.nanchen.aiyagirl.model.CategoryResult;
-import com.nanchen.aiyagirl.module.category.CategoryContract.ICategoryView;
 import com.nanchen.aiyagirl.module.category.CategoryContract.ICategoryPresenter;
+import com.nanchen.aiyagirl.module.category.CategoryContract.ICategoryView;
 import com.nanchen.aiyagirl.net.NetWork;
 
 import rx.Observer;
@@ -69,10 +69,10 @@ public class CategoryPresenter implements ICategoryPresenter {
                     @Override
                     public void onNext(CategoryResult categoryResult) {
                         if (categoryResult != null && !categoryResult.error) {
-                            if (categoryResult.results == null || categoryResult.results.size() == 0){
+                            if (categoryResult.results == null || categoryResult.results.size() == 0) {
                                 // 如果可以，这里可以增加占位图
                                 mCategoryICategoryView.getCategoryItemsFail("获取数据为空！");
-                            }else{
+                            } else {
                                 //true是刷新，false是加载更多
                                 if (isRefresh) {
                                     mCategoryICategoryView.setCategoryItems(categoryResult.results);
@@ -82,7 +82,7 @@ public class CategoryPresenter implements ICategoryPresenter {
                                     mCategoryICategoryView.addCategoryItems(categoryResult.results);
                                 }
                                 // 如果当前获取的数据数目没有全局设定的每次获取的条数，说明已经没有更多数据
-                                if (categoryResult.results.size() < GlobalConfig.CATEGORY_COUNT){
+                                if (categoryResult.results.size() < GlobalConfig.CATEGORY_COUNT) {
                                     mCategoryICategoryView.setNoMore();
                                 }
                             }
