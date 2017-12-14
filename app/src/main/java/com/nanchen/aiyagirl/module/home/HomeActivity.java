@@ -95,8 +95,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, OnBannerLis
 
         initDrawerLayout();
 
-        mBanner.setIndicatorGravity(BannerConfig.RIGHT);
-        mBanner.setOnBannerListener(this);
+        initBanner();
 
         String[] titles = {
                 GlobalConfig.CATEGORY_NAME_APP,
@@ -106,6 +105,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, OnBannerLis
                 GlobalConfig.CATEGORY_NAME_RECOMMEND,
                 GlobalConfig.CATEGORY_NAME_RESOURCE};
 
+        //初始化fragment
         CommonViewPagerAdapter infoPagerAdapter = new CommonViewPagerAdapter(getSupportFragmentManager(), titles);
         // App
         CategoryFragment appFragment = CategoryFragment.newInstance(titles[0]);
@@ -132,6 +132,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, OnBannerLis
         mViewPager.setCurrentItem(1);
         mViewPager.setOffscreenPageLimit(6);
 
+        //订阅拿banner数据
         mHomePresenter.subscribe();
     }
 
@@ -161,6 +162,11 @@ public class HomeActivity extends BaseActivity implements IHomeView, OnBannerLis
         headerView.findViewById(R.id.ll_nav_login).setOnClickListener(mListener);
         headerView.findViewById(R.id.ll_nav_exit).setOnClickListener(mListener);
         headerView.findViewById(R.id.ll_nav_donation).setOnClickListener(mListener);
+    }
+
+    private void initBanner() {
+        mBanner.setIndicatorGravity(BannerConfig.RIGHT);
+        mBanner.setOnBannerListener(this);
     }
 
     /**
@@ -235,7 +241,8 @@ public class HomeActivity extends BaseActivity implements IHomeView, OnBannerLis
 
     @Override
     public void OnBannerClick(int position) {
-        PictureModel model = mHomePresenter.getBannerModel().get(position);
+        //通过presenter拿到当前banner数据并传给PictureActivity
+        PictureModel model = mHomePresenter.getBannerModels().get(position);
 //        Intent intent = PictureActivity.newIntent(this,model.url,model.desc);
 //        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
 //                this,mBanner,PictureActivity.TRANSIT_PIC);

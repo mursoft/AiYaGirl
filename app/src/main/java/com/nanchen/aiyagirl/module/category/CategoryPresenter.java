@@ -25,7 +25,7 @@ public class CategoryPresenter implements ICategoryPresenter {
     private int mPage = 1;
     private Subscription mSubscription;
 
-    public CategoryPresenter(ICategoryView androidICategoryView) {
+    CategoryPresenter(ICategoryView androidICategoryView) {
         mCategoryICategoryView = androidICategoryView;
     }
 

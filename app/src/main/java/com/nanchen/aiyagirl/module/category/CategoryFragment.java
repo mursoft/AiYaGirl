@@ -47,7 +47,6 @@ public class CategoryFragment extends BaseFragment implements ICategoryView, OnR
         return categoryFragment;
     }
 
-
     @Override
     protected int getContentViewLayoutID() {
         return R.layout.fragment_category;

@@ -24,9 +24,7 @@ import rx.schedulers.Schedulers;
 public class HomePresenter implements IHomePresenter{
 
     private Subscription mSubscription;
-
     private IHomeView mHomeView;
-
     private List<PictureModel> mModels;
 
     HomePresenter(IHomeView homeView){
@@ -39,15 +37,16 @@ public class HomePresenter implements IHomePresenter{
         getBannerData();
     }
 
-    public List<PictureModel> getBannerModel(){
-        return this.mModels;
-    }
-
     @Override
     public void unSubscribe() {
         if (mSubscription != null && !mSubscription.isUnsubscribed()){
             mSubscription.unsubscribe();
         }
+    }
+
+    //获取banner数据
+    List<PictureModel> getBannerModels(){
+        return this.mModels;
     }
 
     @Override
@@ -69,9 +68,9 @@ public class HomePresenter implements IHomePresenter{
 
                     @Override
                     public void onNext(CategoryResult categoryResult) {
-                        if (categoryResult != null && categoryResult.results != null
-                                && categoryResult.results.size() > 0){
+                        if (categoryResult != null && categoryResult.results != null && categoryResult.results.size() > 0){
                             List<String> imgUrls = new ArrayList<>();
+                            //遍历转对象
                             for (ResultsBean result : categoryResult.results) {
                                 if (!result.url.isEmpty()){
                                     imgUrls.add(result.url);
@@ -81,8 +80,8 @@ public class HomePresenter implements IHomePresenter{
                                 model.url = result.url;
                                 mModels.add(model);
                             }
+                            //遍历之后把数据传给view
                             mHomeView.setBanner(imgUrls);
-
                         }else{
                             mHomeView.showBannerFail("Banner 图加载失败");
                         }
