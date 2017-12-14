@@ -39,13 +39,14 @@ import butterknife.OnClick;
  * Email: liushilin520@foxmail.com
  * Date: 2017-04-24  10:11
  */
-public class PictureActivity extends BaseActivity implements PictureView{
+public class PictureActivity extends BaseActivity implements PictureView {
 
     public static final String EXTRA_IMAGE_URL = "com.nanchen.aiyagirl.module.picture.PictureActivity.EXTRA_IMAGE_URL";
     public static final String EXTRA_IMAGE_TITLE = "com.nanchen.aiyagirl.module.picture.PictureActivity.EXTRA_IMAGE_TITLE";
     public static final String TRANSIT_PIC = "picture";
-
     String mImageUrl, mImageTitle;
+    private Presenter mPresenter;
+
     @BindView(R.id.picture_toolbar)
     Toolbar mToolbar;
     @BindView(R.id.picture_img)
@@ -57,8 +58,6 @@ public class PictureActivity extends BaseActivity implements PictureView{
     @BindView(R.id.picture_progress)
     ProgressBar mProgressBar;
 
-    private Presenter mPresenter;
-
     public static Intent newIntent(Context context, String url, String desc) {
         Intent intent = new Intent(context, PictureActivity.class);
         intent.putExtra(EXTRA_IMAGE_URL, url);
@@ -66,18 +65,13 @@ public class PictureActivity extends BaseActivity implements PictureView{
         return intent;
     }
 
-    public static void start(Activity context, String url, String desc, Banner banner){
-        Intent intent = new Intent(context,PictureActivity.class);
+    public static void start(Activity context, String url, String desc, Banner banner) {
+        Intent intent = new Intent(context, PictureActivity.class);
         intent.putExtra(EXTRA_IMAGE_URL, url);
         intent.putExtra(EXTRA_IMAGE_TITLE, desc);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 context, banner, TRANSIT_PIC);//与xml文件对应
         ActivityCompat.startActivity(context, intent, options.toBundle());
-    }
-
-    private void parseIntent() {
-        mImageUrl = getIntent().getStringExtra(EXTRA_IMAGE_URL);
-        mImageTitle = getIntent().getStringExtra(EXTRA_IMAGE_TITLE);
     }
 
     @Override
@@ -91,7 +85,6 @@ public class PictureActivity extends BaseActivity implements PictureView{
         mPresenter = new PicturePresenter(this);
         parseIntent();
         ViewCompat.setTransitionName(mImgView, TRANSIT_PIC);
-
 
 //        mAppBarLayout.setAlpha(0.7f);
         mToolbar.setTitle(TextUtils.isEmpty(mImageTitle) ? "图片预览" : mImageTitle);
@@ -116,19 +109,20 @@ public class PictureActivity extends BaseActivity implements PictureView{
                         mImgView.setImageDrawable(resource);
                     }
                 });
-
     }
 
+    private void parseIntent() {
+        mImageUrl = getIntent().getStringExtra(EXTRA_IMAGE_URL);
+        mImageTitle = getIntent().getStringExtra(EXTRA_IMAGE_TITLE);
+    }
 
     @OnClick(R.id.picture_btn_save)
     public void onClick() {
-//        Toasty.info(this, "点击了保存图片", Toast.LENGTH_SHORT, true).show();
-
-        if (mPresenter != null){
-            mPresenter.saveGirl(mImageUrl,mImgView.getWidth(),mImgView.getHeight(),mImageTitle);
+        //保存图片
+        if (mPresenter != null) {
+            mPresenter.saveGirl(mImageUrl, mImgView.getWidth(), mImgView.getHeight(), mImageTitle);
         }
     }
-
 
     @OnClick(R.id.picture_img)
     public void onPictureClick() {

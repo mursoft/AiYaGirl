@@ -30,7 +30,6 @@
         android:visibility="visible"
         android:layout_gravity="center"/>
 
-
     <com.github.chrisbanes.photoview.PhotoView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,6 +44,5 @@
         android:id="@+id/picture_btn_save"
         android:contentDescription="@null"
         android:layout_gravity="bottom|center_horizontal"/>
-
 
 </FrameLayout>

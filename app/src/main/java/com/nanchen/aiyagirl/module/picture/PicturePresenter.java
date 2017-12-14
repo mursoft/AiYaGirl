@@ -36,7 +36,7 @@ public class PicturePresenter implements Presenter {
 
     private Context mContext;
 
-    public PicturePresenter(Context context) {
+    PicturePresenter(Context context) {
         this.mContext = context;
     }
 
