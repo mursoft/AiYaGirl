@@ -54,7 +54,7 @@ public class CategoryFragment extends BaseFragment implements ICategoryView, OnR
 
     @Override
     protected void init() {
-
+        //
         mICategoryPresenter = new CategoryPresenter(this);
 
         categoryName = getArguments().getString(CATEGORY_NAME);
