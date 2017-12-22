@@ -1,5 +1,7 @@
 package com.nanchen.aiyagirl.module.picture;
 
+import android.graphics.Bitmap;
+
 import com.nanchen.aiyagirl.base.BasePresenter;
 import com.nanchen.aiyagirl.base.BaseView;
 
@@ -11,12 +13,14 @@ import com.nanchen.aiyagirl.base.BaseView;
 
 public interface PictureContract {
 
-    interface PictureView extends BaseView{
+    interface PictureView extends BaseView {
         void hideProgress();
+
         void showProgress();
     }
 
-    interface Presenter extends BasePresenter{
-        void saveGirl(String url, int width,int height,String title);
+    interface Presenter extends BasePresenter {
+        void saveGirl(String url, Bitmap bitmap, String title);
+//        void saveGirl(String url, int width,int height,String title);
     }
 }

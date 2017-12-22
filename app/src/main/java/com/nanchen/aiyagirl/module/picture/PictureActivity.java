@@ -1,8 +1,8 @@
 package com.nanchen.aiyagirl.module.picture;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -46,6 +45,7 @@ public class PictureActivity extends BaseActivity implements PictureView {
     public static final String TRANSIT_PIC = "picture";
     String mImageUrl, mImageTitle;
     private Presenter mPresenter;
+    private Bitmap mBitmap = null;
 
     @BindView(R.id.picture_toolbar)
     Toolbar mToolbar;
@@ -58,19 +58,13 @@ public class PictureActivity extends BaseActivity implements PictureView {
     @BindView(R.id.picture_progress)
     ProgressBar mProgressBar;
 
-    public static Intent newIntent(Context context, String url, String desc) {
-        Intent intent = new Intent(context, PictureActivity.class);
-        intent.putExtra(EXTRA_IMAGE_URL, url);
-        intent.putExtra(EXTRA_IMAGE_TITLE, desc);
-        return intent;
-    }
-
     public static void start(Activity context, String url, String desc, Banner banner) {
         Intent intent = new Intent(context, PictureActivity.class);
         intent.putExtra(EXTRA_IMAGE_URL, url);
         intent.putExtra(EXTRA_IMAGE_TITLE, desc);
+        //activity动画，1上下文，2view，3string，过度动画标识，其实是transitionName
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                context, banner, TRANSIT_PIC);//与xml文件对应
+                context, banner, TRANSIT_PIC);//与xml文件对应，其实没有，是直接设置的
         ActivityCompat.startActivity(context, intent, options.toBundle());
     }
 
@@ -95,20 +89,36 @@ public class PictureActivity extends BaseActivity implements PictureView {
             }
         });
         setSupportActionBar(mToolbar);
+        //全屏预览，隐藏mToolbar
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
+//        Glide.with(Utils.getContext())
+//                .load(mImageUrl)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .into(new SimpleTarget<GlideDrawable>() {
+//                    @Override
+//                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+//                        hideProgress();
+//                        mImgView.setImageDrawable(resource);
+//                    }
+//                });
+
+        //利用回调直接拿到bitmap(下载用)，不需要在presenter里面转
         Glide.with(Utils.getContext())
                 .load(mImageUrl)
+                .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<GlideDrawable>() {
+                .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
                         hideProgress();
-                        mImgView.setImageDrawable(resource);
+                        mBitmap = bitmap;
+                        mImgView.setImageBitmap(bitmap);
                     }
                 });
+
     }
 
     private void parseIntent() {
@@ -120,12 +130,14 @@ public class PictureActivity extends BaseActivity implements PictureView {
     public void onClick() {
         //保存图片
         if (mPresenter != null) {
-            mPresenter.saveGirl(mImageUrl, mImgView.getWidth(), mImgView.getHeight(), mImageTitle);
+//            mPresenter.saveGirl(mImageUrl, mImgView.getWidth(), mImgView.getHeight(), mImageTitle);
+            mPresenter.saveGirl(mImageUrl, mBitmap, mImageTitle);
         }
     }
 
     @OnClick(R.id.picture_img)
     public void onPictureClick() {
+        //判断，是否显示mToolbar
         if (getSupportActionBar() != null) {
             if (getSupportActionBar().isShowing()) {
                 getSupportActionBar().hide();

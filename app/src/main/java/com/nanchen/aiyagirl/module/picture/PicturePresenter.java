@@ -7,16 +7,13 @@ import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.os.Environment;
 
-import com.bumptech.glide.Glide;
 import com.nanchen.aiyagirl.R;
 import com.nanchen.aiyagirl.module.picture.PictureContract.Presenter;
 import com.nanchen.aiyagirl.utils.ToastyUtil;
-import com.nanchen.aiyagirl.utils.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 import rx.Observable.OnSubscribe;
@@ -51,20 +48,21 @@ public class PicturePresenter implements Presenter {
     }
 
     @Override
-    public void saveGirl(final String url, final int width, final int height, final String title) {
+    public void saveGirl(final String url, final Bitmap bitmap, final String title) {
+        //创建Observable并传入OnSubscribe接口
         Observable.create(new OnSubscribe<Bitmap>() {
             @Override
             public void call(Subscriber<? super Bitmap> subscriber) {
-                Bitmap bitmap = null;
-                try {
-                    bitmap = Glide.with(Utils.getContext())
-                            .load(url)
-                            .asBitmap()
-                            .into(width, height)
-                            .get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+//                Bitmap bitmap = null;
+//                try {
+//                    bitmap = Glide.with(Utils.getContext())
+//                            .load(url)
+//                            .asBitmap()
+//                            .into(width, height)
+//                            .get();
+//                } catch (InterruptedException | ExecutionException e) {
+//                    e.printStackTrace();
+//                }
                 if (bitmap == null) {
                     subscriber.onError(new Exception("无法下载到图片！"));
                 }
@@ -84,7 +82,7 @@ public class PicturePresenter implements Presenter {
                 try {
                     FileOutputStream fos = new FileOutputStream(file);
                     if (bitmap != null) {
-                        bitmap.compress(CompressFormat.JPEG, 100, fos);
+                        bitmap.compress(CompressFormat.JPEG, 100, fos);//100表示最大质量压缩
                         fos.flush();
                         fos.close();
                     }
@@ -95,6 +93,7 @@ public class PicturePresenter implements Presenter {
                 // 通知图库更新
                 Intent scannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
                 mContext.sendBroadcast(scannerIntent);
+                //发射
                 return Observable.just(uri);
             }
         }).subscribeOn(Schedulers.io())
@@ -102,6 +101,7 @@ public class PicturePresenter implements Presenter {
                 .subscribe(new Action1<Uri>() {
                     @Override
                     public void call(Uri uri) {
+                        //更新ui
                         File appDir = new File(Environment.getExternalStorageDirectory(), mContext.getResources().getString(R.string.app_name));
                         String msg = String.format("图片已保存至 %s 文件夹", appDir.getAbsoluteFile());
                         ToastyUtil.showSuccess(msg);
