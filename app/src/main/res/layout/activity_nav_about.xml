@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,19 +9,19 @@
     tools:context="com.nanchen.aiyagirl.module.navabout.NavAboutActivity">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/nav_about_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:id="@+id/nav_about_toolbar"
-        app:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
         android:background="@color/blue"
         app:navigationIcon="@mipmap/icon_back"
-        app:title="关于爱吖妹纸"/>
+        app:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
+        app:title="关于爱吖妹纸" />
 
     <LinearLayout
         android:id="@+id/ll_content"
-        android:layout_below="@+id/nav_about_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/nav_about_toolbar"
         android:orientation="vertical">
 
         <ImageView
@@ -31,8 +30,9 @@
             android:layout_height="66dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
-            android:src="@mipmap/ic_launcher"
-            android:scaleType="centerCrop" />
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/tv_version_name"
@@ -68,9 +68,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:text="1.0"
-                    android:visibility="gone"
                     android:textColor="@color/colorSubtitle"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <View
@@ -93,7 +93,6 @@
                 android:clickable="true"
                 android:text="给个Star吧" />
 
-
         </LinearLayout>
 
         <TextView
@@ -110,43 +109,14 @@
 
     </LinearLayout>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_gankio"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:text="《代码家 · 干货集中营》"
+        android:textColor="@color/colorContent"
+        android:textSize="13sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="《"
-                android:textColor="@color/colorContent"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/tv_gankio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="代码家 · 干货集中营"
-                android:textColor="@color/colorContent"
-                android:textSize="13sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="》"
-                android:textColor="@color/colorContent"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-
-    </LinearLayout>
 </RelativeLayout>
