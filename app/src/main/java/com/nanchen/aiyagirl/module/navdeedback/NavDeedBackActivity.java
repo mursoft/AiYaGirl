@@ -1,6 +1,8 @@
 package com.nanchen.aiyagirl.module.navdeedback;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,9 +12,13 @@ import android.view.View.OnClickListener;
 import com.nanchen.aiyagirl.R;
 import com.nanchen.aiyagirl.base.BaseActivity;
 import com.nanchen.aiyagirl.module.web.WebViewActivity;
+import com.nanchen.aiyagirl.utils.Utils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 
 
 /**
@@ -45,34 +51,56 @@ public class NavDeedBackActivity extends BaseActivity {
 
     @OnClick({R.id.tv_issues, R.id.tv_other, R.id.tv_qq, R.id.tv_email, R.id.tv_blog})
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.tv_issues:
-                Intent intent = new Intent(this, WebViewActivity.class);
+                intent = new Intent(this, WebViewActivity.class);
                 intent.putExtra(WebViewActivity.GANK_TITLE, "爱吖妹纸");
                 intent.putExtra(WebViewActivity.GANK_URL, "https://github.com/nanchen2251/AiYaGirl");
                 startActivity(intent);
                 break;
             case R.id.tv_other:
-                Intent intent1 = new Intent(this, WebViewActivity.class);
-                intent1.putExtra(WebViewActivity.GANK_TITLE, "nanchen2251");
-                intent1.putExtra(WebViewActivity.GANK_URL, "https://github.com/nanchen2251");
-                startActivity(intent1);
+                intent = new Intent(this, WebViewActivity.class);
+                intent.putExtra(WebViewActivity.GANK_TITLE, "nanchen2251");
+                intent.putExtra(WebViewActivity.GANK_URL, "https://github.com/nanchen2251");
+                startActivity(intent);
                 break;
             case R.id.tv_qq:
-                String url = "mqqwpa://im/chat?chat_type=wpa&uin=503233512";
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                if (isQQClientAvailable()) {
+                    String url = "mqqwpa://im/chat?chat_type=wpa&uin=503233512";
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                } else
+                    Toasty.error(this, "当前设备未安装QQ").show();
                 break;
             case R.id.tv_email:
-                Intent data = new Intent(Intent.ACTION_SENDTO);
-                data.setData(Uri.parse("mailto:liushilin520@foxmail.com"));
-                startActivity(data);
+                intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:liushilin520@foxmail.com"));
+                startActivity(intent);
                 break;
             case R.id.tv_blog:
-                Intent intent2 = new Intent(this, WebViewActivity.class);
-                intent2.putExtra(WebViewActivity.GANK_TITLE, "博客园");
-                intent2.putExtra(WebViewActivity.GANK_URL, "http://www.cnblogs.com/liushilin/");
-                startActivity(intent2);
+                intent = new Intent(this, WebViewActivity.class);
+                intent.putExtra(WebViewActivity.GANK_TITLE, "博客园");
+                intent.putExtra(WebViewActivity.GANK_URL, "http://www.cnblogs.com/liushilin/");
+                startActivity(intent);
                 break;
         }
     }
+
+    /**
+     * 判断qq是否可用
+     */
+    public static boolean isQQClientAvailable() {
+        final PackageManager packageManager = Utils.getContext().getPackageManager();
+        List<PackageInfo> packageInfo = packageManager.getInstalledPackages(0);
+        if (packageInfo != null) {
+            for (int i = 0; i < packageInfo.size(); i++) {
+                String pn = packageInfo.get(i).packageName;
+                if (pn.equals("com.tencent.mobileqq")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }
