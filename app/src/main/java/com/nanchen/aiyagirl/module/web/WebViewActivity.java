@@ -26,6 +26,7 @@ public class WebViewActivity extends BaseActivity implements IWebView{
 
     public static final String GANK_URL = "com.nanchen.aiyagirl.module.web.WebViewActivity.gank_url";
     public static final String GANK_TITLE = "com.nanchen.aiyagirl.module.web.WebViewActivity.gank_title";
+
     @BindView(R.id.web_title)
     TextView mWebTitle;
     @BindView(R.id.web_toolbar)
@@ -51,12 +52,8 @@ public class WebViewActivity extends BaseActivity implements IWebView{
         return R.layout.activity_web_view;
     }
 
-
-
     @Override
     protected void initView(Bundle savedInstanceState) {
-
-
 
         mWebPresenter = new WebPresenter(this);
 
@@ -100,12 +97,14 @@ public class WebViewActivity extends BaseActivity implements IWebView{
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         settings.setSupportZoom(true);
 
+        //重写方法，处理加载进度
         mWebView.setWebChromeClient(new MyWebChrome());
         mWebView.setWebViewClient(new MyWebClient());
     }
 
     @Override
     public void onBackPressed() {
+        //判断回退
         if (mWebView.canGoBack()) {
             mWebView.goBack();
         } else {

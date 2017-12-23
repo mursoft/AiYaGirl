@@ -13,18 +13,17 @@ import com.nanchen.aiyagirl.module.web.WebContract.IWebView;
  */
 
 public class WebPresenter implements IWebPresenter {
+
     private IWebView mWebView;
     private String mGankUrl;
-    private Activity mActivity;
 
-    public WebPresenter(IWebView webView){
+    WebPresenter(IWebView webView) {
         this.mWebView = webView;
     }
 
-
     @Override
     public void subscribe() {
-        mActivity = mWebView.getWebViewContext();
+        Activity mActivity = mWebView.getWebViewContext();
         Intent intent = mActivity.getIntent();
         mWebView.setGankTitle(intent.getStringExtra(WebViewActivity.GANK_TITLE));
         mWebView.initWebView();
