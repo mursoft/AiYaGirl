@@ -49,6 +49,6 @@ public class NavHomeActivity extends BaseActivity {
 
     @OnClick(R.id.nav_home_fab)
     public void onClick() {
-        ShareUtil.share(this, R.string.string_share_text);
+        ShareUtil.shareText(this, this.getString(R.string.string_share_text));
     }
 }
